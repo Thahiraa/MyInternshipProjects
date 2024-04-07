@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f2f2f2;
+    }
+    
+    .container {
+      width: 400px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      text-align: center;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    
+    li {
+      padding: 10px;
+      background-color: #f9f9f9;
+      margin-bottom: 5px;
+      border-radius: 3px;
+    }
+    
+    .task-complete {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Task Manager</h1>
+    <input type="text" id="taskInput" placeholder="Add new task">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    // Function to add a new task
+    function addTask() {
+      var taskInput = document.getElementById('taskInput');
+      var taskText = taskInput.value.trim();
+      if (taskText !== '') {
+        var taskList = document.getElementById('taskList');
+        var li = document.createElement('li');
+        li.textContent = taskText;
+        li.addEventListener('click', toggleTask);
+        taskList.appendChild(li);
+        taskInput.value = '';
+        updateLocalStorage();
+      }
+    }
+
+    // Function to toggle task completion status
+    function toggleTask() {
+      this.classList.toggle('task-complete');
+      updateLocalStorage();
+    }
+
+    // Function to update local storage with tasks
+    function updateLocalStorage() {
+      var taskItems = document.querySelectorAll('#taskList li');
+      var tasks = [];
+      taskItems.forEach(function(item) {
+        tasks.push({
+          text: item.textContent,
+          completed: item.classList.contains('task-complete')
+        });
+      });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Function to load tasks from local storage
+    function loadTasks() {
+      var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      var taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+      tasks.forEach(function(task) {
+        var li = document.createElement('li');
+        li.textContent = task.text;
+        if (task.completed) {
+          li.classList.add('task-complete');
+        }
+        li.addEventListener('click', toggleTask);
+        taskList.appendChild(li);
+      });
+    }
+
+    // Load tasks when the page is loaded
+    window.onload = function() {
+      loadTasks();
+    };
+  </script>
+</body>
+</html>

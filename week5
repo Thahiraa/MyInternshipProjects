@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiffin Service</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .menu {
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Tiffin Service</h1>
+        <nav>
+            <ul>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="menu">
+        <!-- Menu items will be dynamically generated here -->
+    </section>
+
+    <footer>
+        <p>Contact us: example@example.com</p>
+    </footer>
+
+    <script>
+        // Script for fetching menu items from backend and rendering them on the page
+        window.addEventListener('load', () => {
+            fetchMenuItems();
+        });
+
+        function fetchMenuItems() {
+            // Fetch menu items from backend API
+            fetch('api/menu')
+            .then(response => response.json())
+            .then(data => {
+                renderMenu(data);
+            })
+            .catch(error => {
+                console.error('Error fetching menu items:', error);
+            });
+        }
+
+        function renderMenu(menuItems) {
+            const menuSection = document.querySelector('.menu');
+
+            menuItems.forEach(item => {
+                const menuItemElement = document.createElement('div');
+                menuItemElement.classList.add('menu-item');
+
+                const itemName = document.createElement('h2');
+                itemName.textContent = item.name;
+
+                const itemDescription = document.createElement('p');
+                itemDescription.textContent = item.description;
+
+                const itemPrice = document.createElement('p');
+                itemPrice.textContent = `Price: $${item.price}`;
+
+                menuItemElement.appendChild(itemName);
+                menuItemElement.appendChild(itemDescription);
+                menuItemElement.appendChild(itemPrice);
+
+                menuSection.appendChild(menuItemElement);
+            });
+        }
+    </script>
+</body>
+</html>
